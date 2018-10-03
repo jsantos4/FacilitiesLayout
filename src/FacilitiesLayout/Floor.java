@@ -145,6 +145,10 @@ class Floor {
         }
     }
 
+    int getRows() { return rows; }
+    int getColumns() {return columns;}
+    int getLevel() { return level; }
+
     ArrayList<Station> getStationList() { return stationList; }
 
     int getPopulation() { return population; }
