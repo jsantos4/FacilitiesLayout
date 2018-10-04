@@ -1,6 +1,7 @@
 package FacilitiesLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 class Floor {
@@ -145,13 +146,23 @@ class Floor {
         }
     }
 
+    public synchronized ArrayList<int[]> crossover(int crossoverPoint){
+        return new ArrayList<>(posSwaps.subList(0, crossoverPoint));
+    }
+
+    public synchronized void updateCrossedOverSwaps(List<int []> newSwaps){
+        if(newSwaps.size() != 0) {
+            posSwaps.subList(0, newSwaps.size()).clear();
+            posSwaps.addAll(0, newSwaps);
+        }
+    }
+
     int getRows() { return rows; }
     int getColumns() {return columns;}
     int getLevel() { return level; }
+    int getPopulation() { return population; }
 
     ArrayList<Station> getStationList() { return stationList; }
-
-    int getPopulation() { return population; }
 
     double getTotalAffinity() { return affinity; }
 }

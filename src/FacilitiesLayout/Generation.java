@@ -1,13 +1,14 @@
 package FacilitiesLayout;
 
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Exchanger;
 
 class Generation implements Runnable {
     private Random random = new Random();
     private final static int total = 2;
-    Thread thread = new Thread();
-
     private Floor ground;
+    private Exchanger<List<int[]>> exchanger;
 
     Generation(Floor floor) {
         this.ground = floor;
@@ -21,10 +22,14 @@ class Generation implements Runnable {
         }
     }
 
-    private void swap() {
+    private void swap(Floor[] floors) {
+        //int crossoverPoint = random.nextInt(ground.getRows()/ground.getColumns() );
         try {
             ground.calcTotalAffinity();
             ground.generateSwaps();
+            //for (Floor floor : floors) {
+            //floor.updateCrossedOverSwaps(exchanger.exchange(floor.crossover(crossoverPoint)));
+            //}
             mutate();
             ground.executeSwaps();
             ground.calcTotalAffinity();
@@ -58,7 +63,6 @@ class Generation implements Runnable {
 
 
     public void run() {
-        thread.start();
 
         Floor previousBest = new Floor(ground, -1);
 
@@ -74,12 +78,12 @@ class Generation implements Runnable {
         loadGenerations(floors, generations);
 
         int genCount = 0;
-        //while (previousBest.getTotalAffinity() > (ground.getRows() * ground.getColumns()) * 400) {
-        for (int j = 0; j < 1000; j++) {
+        while (previousBest.getTotalAffinity() > 37000) {
+        //for (int j = 0; j < 1000; j++) {
             System.out.println("Generation: " + ++genCount);
             System.out.println("Affinity: " + previousBest.getTotalAffinity());
             for (int i = 0; i < total; i++){
-                generations[i].swap();
+                generations[i].swap(floors);
             }
 
             Floor temp = new Floor(bestFloor(floors), -1);
