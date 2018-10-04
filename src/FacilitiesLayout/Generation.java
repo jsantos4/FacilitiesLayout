@@ -1,6 +1,5 @@
 package FacilitiesLayout;
 
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Exchanger;
 
@@ -8,7 +7,8 @@ class Generation implements Runnable {
     private Random random = new Random();
     private final static int total = 2;
     private Floor ground;
-    private Exchanger<List<int[]>> exchanger;
+    private Exchanger<Floor> exchanger = new Exchanger<>();
+    Floor best;
 
     Generation(Floor floor) {
         this.ground = floor;
@@ -23,18 +23,16 @@ class Generation implements Runnable {
     }
 
     private void swap(Floor[] floors) {
-        //int crossoverPoint = random.nextInt(ground.getRows()/ground.getColumns() );
-        try {
-            ground.calcTotalAffinity();
-            ground.generateSwaps();
-            //for (Floor floor : floors) {
-            //floor.updateCrossedOverSwaps(exchanger.exchange(floor.crossover(crossoverPoint)));
-            //}
-            mutate();
-            ground.executeSwaps();
-            ground.calcTotalAffinity();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (Floor f : floors) {
+            try {
+                f.calcTotalAffinity();
+                f.generateSwaps();
+                mutate();
+                f.executeSwaps();
+                f.calcTotalAffinity();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -78,8 +76,7 @@ class Generation implements Runnable {
         loadGenerations(floors, generations);
 
         int genCount = 0;
-        while (previousBest.getTotalAffinity() > 37000) {
-        //for (int j = 0; j < 1000; j++) {
+        for (;;) {
             System.out.println("Generation: " + ++genCount);
             System.out.println("Affinity: " + previousBest.getTotalAffinity());
             for (int i = 0; i < total; i++){
@@ -96,9 +93,15 @@ class Generation implements Runnable {
                 loadFloors(floors, previousBest);
                 loadGenerations(floors, generations);
             }
-        }
 
-        System.out.println("Final affinity: " + previousBest.getTotalAffinity());
+            if ((genCount % 100) == 0) {
+                try {
+                    exchanger.exchange(previousBest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

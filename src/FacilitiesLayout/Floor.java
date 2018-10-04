@@ -146,16 +146,6 @@ class Floor {
         }
     }
 
-    public synchronized ArrayList<int[]> crossover(int crossoverPoint){
-        return new ArrayList<>(posSwaps.subList(0, crossoverPoint));
-    }
-
-    public synchronized void updateCrossedOverSwaps(List<int []> newSwaps){
-        if(newSwaps.size() != 0) {
-            posSwaps.subList(0, newSwaps.size()).clear();
-            posSwaps.addAll(0, newSwaps);
-        }
-    }
 
     int getRows() { return rows; }
     int getColumns() {return columns;}
