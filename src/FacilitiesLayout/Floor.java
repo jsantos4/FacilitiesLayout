@@ -152,7 +152,7 @@ class Floor {
     int getLevel() { return level; }
     int getPopulation() { return population; }
 
-    ArrayList<Station> getStationList() { return stationList; }
+    Station[][] getStations() { return stations; }
 
     double getTotalAffinity() { return affinity; }
 }

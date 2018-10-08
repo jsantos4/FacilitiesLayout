@@ -1,17 +1,26 @@
 package FacilitiesLayout;
 
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+
 import java.util.Random;
 import java.util.concurrent.Exchanger;
 
-class Generation implements Runnable {
+class GeneticAlgorithm implements Runnable {
     private Random random = new Random();
-    private final static int total = 2;
+    private final static int total = 16;
     private Floor ground;
     private Exchanger<Floor> exchanger = new Exchanger<>();
-    Floor best;
+    private Floor best;
 
-    Generation(Floor floor) {
+    GeneticAlgorithm(Floor floor) {
         this.ground = floor;
+    }
+
+
+    Floor getBest() {
+        return best;
     }
 
     private void mutate() {
@@ -53,12 +62,11 @@ class Generation implements Runnable {
         return floors[bestIndex];
     }
 
-    private static void loadGenerations(Floor[] floors, Generation[] generations) {
+    private static void loadGenerations(Floor[] floors, GeneticAlgorithm[] generations) {
         for (int i = 0; i < total; i++) {
-            generations[i] = new Generation(floors[i]);
+            generations[i] = new GeneticAlgorithm(floors[i]);
         }
     }
-
 
     public void run() {
 
@@ -67,7 +75,7 @@ class Generation implements Runnable {
         System.out.println("Affinity: " + ground.getTotalAffinity());
 
         Floor[] floors = new Floor[total];
-        Generation[] generations = new Generation[total];
+        GeneticAlgorithm[] generations = new GeneticAlgorithm[total];
 
         for (int i = 0; i < total; i++) {
             floors[i] = new Floor(ground, i);
@@ -75,10 +83,10 @@ class Generation implements Runnable {
 
         loadGenerations(floors, generations);
 
-        int genCount = 0;
+        int genCount = 1;
         for (;;) {
-            System.out.println("Generation: " + ++genCount);
-            System.out.println("Affinity: " + previousBest.getTotalAffinity());
+
+            best = previousBest;
             for (int i = 0; i < total; i++){
                 generations[i].swap(floors);
             }
@@ -94,14 +102,16 @@ class Generation implements Runnable {
                 loadGenerations(floors, generations);
             }
 
-            if ((genCount % 100) == 0) {
+            if ((++genCount % 100) == 0) {
+                System.out.println("Generation: " + genCount);
+                System.out.println("Affinity: " + previousBest.getTotalAffinity());
                 try {
                     exchanger.exchange(previousBest);
-                } catch (Exception e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+
         }
     }
-
 }
