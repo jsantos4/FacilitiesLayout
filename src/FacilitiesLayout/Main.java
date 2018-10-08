@@ -27,6 +27,7 @@ public class Main extends Application {
         Group group = new Group();
         scene = new Scene(group, 800, 800);
         gridPane = new GridPane();
+        group.getChildren().add(gridPane);
         stage.setTitle("Facility Layout");
         stage.setScene(scene);
         stage.show();
@@ -47,14 +48,13 @@ public class Main extends Application {
 
                 Platform.runLater(() -> {
                     try {
-                         updateGUI(generation.getBest(), stage);
-                        System.out.println("the");
+                        updateGUI(generation.getBest(), stage);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 });
             }
-        }, 1000, 1000);
+        }, 500, 500);
 
         executor.shutdown();
 
@@ -70,9 +70,12 @@ public class Main extends Application {
                 GridPane.setColumnIndex(rec, col);
 
                 gridPane.getChildren().addAll(rec);
+
             }
         }
+
         stage.setTitle("Layout");
         stage.setScene(scene);
+
     }
 }

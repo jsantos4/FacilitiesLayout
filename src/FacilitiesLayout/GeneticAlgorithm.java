@@ -1,9 +1,5 @@
 package FacilitiesLayout;
 
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-
 import java.util.Random;
 import java.util.concurrent.Exchanger;
 

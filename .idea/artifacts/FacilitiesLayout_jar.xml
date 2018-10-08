@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FacilitiesLayout:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FacilitiesLayout_jar</output-path>
+    <root id="archive" name="FacilitiesLayout.jar">
+      <element id="module-output" name="FacilitiesLayout" />
+    </root>
+  </artifact>
+</component>

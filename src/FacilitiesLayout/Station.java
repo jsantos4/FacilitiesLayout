@@ -17,8 +17,8 @@ class Station {
         Random rand = new Random();
         int value = rand.nextInt(256);
 
-        color = color.rgb(value,value, value);
         colorTotal = value;
+        color = color.rgb(0, value, 0);
         affinity = 0;
 
     }
